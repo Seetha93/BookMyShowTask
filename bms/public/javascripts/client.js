@@ -1,21 +1,33 @@
+var inputNumber = '';
 $(document).ready(function() {
 	 $('#user-input').keydown(function(e) {
+		 inputNumber = $('#user-input').val();
 		if(e.keyCode == 13){ //Enter pressed
-		go();
+			console.log();
+			if(isNumeric(inputNumber)==1) {
+				go(inputNumber);
+			}
+			else 
+				alert("Please enter only numeric not alphabets");
 		}
 	});
 	$('.go-user').on('click', function(e) {
-		go();
+		if(isNumeric(inputNumber)) {
+				go(inputNumber);
+			}
+			else 
+				alert("Please enter only numeric not alphabets");
+	});
+	$('.go-again').on('click', function(e){
+		$('.user-form').show();
+		$('.output-box').hide();
 	});
 });
 
-var inputNumber = '';
 var numberArray;
+
 function go() {
-	inputNumber = $('#user-input').val();
-	
 	/*Ajax call is made to get the array */
-	
 	$.ajax({
 		type: "GET",
 		url: "/getArray",
@@ -51,8 +63,9 @@ function go() {
 				checkAndAdd(inputNumber,numberArray); 
 			}
 			$('.user-form').hide();
-			$('.chat-box').show();
+			$('.output-box').show();
 			$('.message-area').html("<p>"+numberArray+"</p>");
+			$('.go-again').show();
 			for(var i=0;i < numberArray.length; i++) {
 				console.log("From data base : "+numberArray[i]);
 			}
@@ -64,7 +77,6 @@ function go() {
   };
  
  /*Ajax call is made to post the final array in redis */
- 
 function saveInRedis(numberArray) {
 	$.ajax({
 		type: "POST",
@@ -75,18 +87,24 @@ function saveInRedis(numberArray) {
 		{
 			alert(response);
 		}
-	
 	})
 }
 
 /* Function to skip the duplicates */
 function checkAndAdd(number,fromStored) {
 	if($.inArray(number, fromStored) > -1)
-		alert("Number is already present");
+		console.log("Number is already present");
 	else{
 		fromStored.length = fromStored.length+1;
 		fromStored[fromStored.length-1]= number;
 	}
 }
-	
-	
+
+/* Function to ensure that user had entered only numeric characters */	
+function isNumeric(input) {
+	var letters = /[A-Za-z]+$/;
+	if(letters.test(input))
+		return 0;
+	else
+		return 1;
+}	
