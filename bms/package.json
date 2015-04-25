@@ -1,0 +1,13 @@
+{
+  "name": "BlueChatter",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.12.3",
+    "connect-redis": "1.4.x",
+    "express": "3.4.8",
+    "redis": "^0.12.1"
+  }
+}
